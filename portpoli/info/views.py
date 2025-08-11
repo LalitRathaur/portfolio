@@ -1,7 +1,10 @@
 # views.py
+# views.py
 from django.shortcuts import render, redirect
+from django.conf import settings
 from .models import Document, Project
 from .form import DocumentForm, ProjectForm
+import os
 
 def portfolio(request):
     documents = Document.objects.all()
@@ -23,6 +26,14 @@ def portfolio(request):
         form = DocumentForm()
         project_form = ProjectForm()
 
+    # Check if profile image exists in media
+    profile_filename = "your_photo.jpg"  # name of your image file in MEDIA_ROOT
+    profile_image_url = (
+        request.build_absolute_uri(settings.MEDIA_URL + profile_filename)
+        if os.path.exists(os.path.join(settings.MEDIA_ROOT, profile_filename))
+        else None
+    )
+
     context = {
         "name": "Lalit Rathaur",
         "role": "Software Developer / CS Student at IIT Indore",
@@ -36,7 +47,7 @@ def portfolio(request):
         "documents": documents,
         "form": form,
         "project_form": project_form,
-        "profile_image": request.build_absolute_uri("/media/your_photo.jpg")
+        "profile_image": profile_image_url
     }
 
     return render(request, "index.html", context)
