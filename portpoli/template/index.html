@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ name }} - Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f9f9f9;
+        }
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        header img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+        section {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 8px 0;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        /* Popup (modal) styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="{{ profile_image}}" alt="{{ name }}'s Photo">
+    <div>
+        <h1>{{ name }}</h1>
+        <h2>{{ role }}</h2> 
+        <h2>{{ branch }} | CPI: {{ cpi }}</h2>
+        <p><b>Competitive Programming: 
+            Codeforces {{ codeforces }}, 
+            LeetCode {{ leetcode }}, 
+            CodeChef {{ codechef }}
+        </b></p>
+    </div>
+</header>
+
+<section>
+    <h2>About Me</h2>
+    <p>{{ about }}</p>
+</section>
+
+<section>
+    <h2>Projects</h2>
+    <ul>
+        {% for project in projects %}
+            <li><strong>{{ project.name }}</strong></li>
+            <li><b>Description</b> — {{ project.description }}</li>
+            <li><b>Domain</b> — {{ project.domain }}</li>
+            <li><b>Timeline</b> — {{ project.timeline }}</li>
+            <li><b>Skills</b> — {{ project.skills }}</li>
+        {% endfor %}
+    </ul>
+    <button onclick="openModal('projectModal')">Add Project</button>
+</section>
+
+<section>
+    <h2>Documents</h2>
+    <ul>
+        {% for doc in documents %}
+            <li>
+                <strong>{{ doc.title }}</strong> —
+                <a href="{{ doc.uploaded_file.url }}" target="_blank">View File</a>
+            </li>
+        {% empty %}
+            <li>No files uploaded yet.</li>
+        {% endfor %}
+    </ul>
+    <button onclick="openModal('documentModal')">Upload Document</button>
+</section>
+
+<!-- Project Modal -->
+<div class="modal" id="projectModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('projectModal')">&times;</span>
+        <h3>Add a Project</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ project_form.as_p }}
+            <button type="submit" name="add_project">Add Project</button>
+        </form>
+    </div>
+</div>
+
+<!-- Document Modal -->
+<div class="modal" id="documentModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('documentModal')">&times;</span>
+        <h3>Upload a Document</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).style.display = "flex";
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+    }
+</script>
+
+</body>
+</html>
