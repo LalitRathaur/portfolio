@@ -19,9 +19,10 @@ from django.urls import path
 from info import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import reverse
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.portfolio)
+    path('',views.portfolio,name='portpolio')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # serve media files during development

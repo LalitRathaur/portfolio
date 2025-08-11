@@ -3,6 +3,7 @@ from django.conf import settings
 from .models import Document, Project
 from .form import DocumentForm, ProjectForm
 import os
+from django.urls import reverse
 
 def portfolio(request):
     documents = Document.objects.all()
@@ -16,7 +17,7 @@ def portfolio(request):
            form = DocumentForm(request.POST, request.FILES)
            if form.is_valid():
               form.save()
-              return redirect('/')
+              return redirect(reverse('portpolio'))
            else:
                print(form.errors)
 
@@ -24,7 +25,7 @@ def portfolio(request):
             project_form = ProjectForm(request.POST)
             if project_form.is_valid():
                 project_form.save()
-                return redirect('/')
+                return redirect(reverse('portpolio'))
 
     # Profile image check
     profile_filename = "your_photo.jpg"
