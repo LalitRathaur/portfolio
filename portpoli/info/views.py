@@ -1,5 +1,3 @@
-# views.py
-# views.py
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Document, Project
@@ -10,29 +8,31 @@ def portfolio(request):
     documents = Document.objects.all()
     projects = Project.objects.all()
 
+    # Always initialize forms
+    form = DocumentForm()
+    project_form = ProjectForm()
     if request.method == 'POST':
         if 'upload_document' in request.POST:
-            form = DocumentForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.save()
-                return redirect('portfolio')
+           form = DocumentForm(request.POST, request.FILES)
+           if form.is_valid():
+              form.save()
+              return redirect('/')
+           else:
+               print(form.errors)
 
         elif 'add_project' in request.POST:
             project_form = ProjectForm(request.POST)
             if project_form.is_valid():
                 project_form.save()
-                return redirect('portfolio')
-    else:
-        form = DocumentForm()
-        project_form = ProjectForm()
+                return redirect('/')
 
-    # Check if profile image exists in media
-    profile_filename = "your_photo.jpg"  # name of your image file in MEDIA_ROOT
-    profile_image_url = (
-        request.build_absolute_uri(settings.MEDIA_URL + profile_filename)
-        if os.path.exists(os.path.join(settings.MEDIA_ROOT, profile_filename))
-        else None
-    )
+    # Profile image check
+    profile_filename = "your_photo.jpg"
+    profile_path = os.path.join(settings.MEDIA_ROOT, profile_filename)
+    if os.path.isfile(profile_path):
+        profile_image_url = request.build_absolute_uri(settings.MEDIA_URL + profile_filename)
+    else:
+        profile_image_url = None
 
     context = {
         "name": "Lalit Rathaur",
