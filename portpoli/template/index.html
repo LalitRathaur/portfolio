@@ -148,6 +148,10 @@
         <form method="post">
             {% csrf_token %}
             {{ project_form.as_p }}
+            <p>
+                <label for="proj_password">Password:</label>
+                <input type="password" name="password" id="proj_password" required>
+            </p>
             <button type="submit" name="add_project">Add Project</button>
         </form>
     </div>
@@ -161,7 +165,11 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit"name="upload_document">Upload</button>
+            <p>
+                <label for="doc_password">Password:</label>
+                <input type="password" name="password" id="doc_password" required>
+            </p>
+            <button type="submit" name="upload_document">Upload</button>
         </form>
     </div>
 </div>

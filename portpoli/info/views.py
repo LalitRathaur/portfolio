@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Document, Project
 from .form import DocumentForm, ProjectForm
+from django.http import HttpResponse
 import os
 from django.urls import reverse
-
+PASSWORD = "mysecret"
 def portfolio(request):
     documents = Document.objects.all()
     projects = Project.objects.all()
@@ -13,6 +14,11 @@ def portfolio(request):
     form = DocumentForm()
     project_form = ProjectForm()
     if request.method == 'POST':
+        password = request.POST.get("password")
+
+        # Password check
+        if password != PASSWORD:
+            return HttpResponse("Password is incorrect you cant save it")
         if 'upload_document' in request.POST:
            form = DocumentForm(request.POST, request.FILES)
            if form.is_valid():
